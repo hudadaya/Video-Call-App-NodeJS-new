@@ -181,6 +181,8 @@ export default {
 
         let colDiv = document.createElement('div');
         colDiv.className = `col-10 card chat-card msg ${msgBg}`;
+
+        // const xssFilters = require('xss-filters');
         colDiv.innerHTML = xssFilters.inHTMLData(data.msg).autoLink({ target: "_blank", rel: "nofollow" });
 
         let rowDiv = document.createElement('div');
