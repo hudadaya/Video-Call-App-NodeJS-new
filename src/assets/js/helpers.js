@@ -1,3 +1,4 @@
+moment.locale('zh-cn', { useLeftUnits: true });
 export default {
     generateRandomString() {
         const crypto = window.crypto || window.msCrypto;
@@ -161,10 +162,12 @@ export default {
     },
 
 
+    
     addChat(data, senderType) {
+        moment.locale('zh-cn');
         let chatMsgDiv = document.querySelector('#chat-messages');
         let contentAlign = 'justify-content-end';
-        let senderName = 'You';
+        let senderName = '你';
         let msgBg = 'bg-white';
 
         if (senderType === 'remote') {
@@ -177,7 +180,7 @@ export default {
 
         let infoDiv = document.createElement('div');
         infoDiv.className = 'sender-info';
-        infoDiv.innerText = `${senderName} - ${moment().format('Do MMMM, YYYY h:mm a')}`;
+        infoDiv.innerText = `${senderName} - ${moment().format('YYYY年 M月 DD日 dddd,  h:mm a')}`;
 
         let colDiv = document.createElement('div');
         colDiv.className = `col-10 card chat-card msg ${msgBg}`;

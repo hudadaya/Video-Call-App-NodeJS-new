@@ -3,6 +3,9 @@
  * @date 6th January, 2020
  */
 import h from './helpers.js';
+// import moment from 'moment';
+// import 'moment/locale/zh-cn'; // 确保加载中文语言包
+moment.locale('zh-cn');
 
 window.addEventListener('load', () => {
     const room = h.getQString(location.href, 'room');

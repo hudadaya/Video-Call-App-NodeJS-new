@@ -10,8 +10,15 @@
     padding-bottom: 40px;
     padding-top: 15px;
     min-height: 100vh;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
 }
-
+/* .pull-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} */
 .chat-col.chat-opened {
     right: 0;
     overflow-y: auto;
@@ -146,20 +153,77 @@
     border-radius: 0%;
     z-index: 100;
 }
+/* .send-bgc{
+    background-color: black !important;
+}
 
+.send-bgc:hover{
+    background-color: black !important;
+}
 
 .pointer{
     cursor: pointer;
 }
 
-
-.record-option{
+.bg-info {
+    background-color: #3e49a5 !important;
+}
+.btn-info {
+    color: #fff;
+    background-color: #3e49a5;
+    border-color: #3e49a5;
+}
+.btn{
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color:#3e49a5 ;
+    border: 1px solid #3e49a5;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    /* 新增的伪类 */
+    /* &:hover,
+    &:focus,
+    &:active,
+    &.active {
+        color: #fff;
+        background-color: #3e49a5;
+        border-color: #3e49a5;
+    }
+}
+.btn-block {
+    display: block;
+    width: 100%;
+}
+.border-info {
+    border-color: #3e49a5 !important;
+} */
+.record-option{ 
     height: 200px;
     border-radius: 10%;
-    border: 1px solid #17a2b8;
+    border: 1px solid #3e49a5;
+    background-color: #3e49a5;
     cursor: pointer;
     padding: 10px;
     vertical-align: middle;
+    color: white;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
 }
 
 
@@ -179,7 +243,7 @@
     background-color: #fefefe;
     margin: 15% auto;
     padding: 20px;
-    border: 1px solid #17a2b8;
+    border: 1px solid #3e49a5;
     width: 80%;
 }
 

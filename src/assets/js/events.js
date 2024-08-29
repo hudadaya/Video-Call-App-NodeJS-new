@@ -28,7 +28,22 @@ window.addEventListener( 'load', () => {
         }, 300 );
     } );
 
-
+    document.getElementById("toggle-video").addEventListener("click", function() {
+        var videoStatusText = document.getElementsByClassName("status-text")[0];
+        if (videoStatusText.textContent === "隐藏视频") {
+            videoStatusText.textContent = "开启视频";
+        } else {
+            videoStatusText.textContent = "隐藏视频";
+        }
+    });
+    document.getElementById("toggle-mute").addEventListener("click", function() {
+        var muteStatusText = document.getElementsByClassName("status-text")[1];
+        if (muteStatusText.textContent === "闭麦") {
+            muteStatusText.textContent = "开麦";
+        } else {
+            muteStatusText.textContent = "闭麦";
+        }
+    });
     //When the video frame is clicked. This will enable picture-in-picture
     document.getElementById( 'local' ).addEventListener( 'click', () => {
         if ( !document.pictureInPictureElement ) {
@@ -67,8 +82,8 @@ window.addEventListener( 'load', () => {
             let roomLink = `${ location.origin }?room=${ roomName.trim().replace( ' ', '_' ) }_${ helpers.generateRandomString() }`;
 
             //show message with link to room
-            document.querySelector( '#room-created' ).innerHTML = `Room successfully created. Click <a href='${ roomLink }'>here</a> to enter room. 
-                Share the room link with your partners.`;
+            document.querySelector( '#room-created' ).innerHTML = `房间创建成功. 点击 <a href='${ roomLink }'>这里</a> 进入房间吧！
+            快分享链接邀请同伴进入房间`;
 
             //empty the values
             document.querySelector( '#room-name' ).value = '';
@@ -76,7 +91,7 @@ window.addEventListener( 'load', () => {
         }
 
         else {
-            document.querySelector('#err-msg').innerText = "All fields are required";
+            document.querySelector('#err-msg').innerText = "所有的空格都要填噢";
         }
     } );
 
@@ -99,7 +114,7 @@ window.addEventListener( 'load', () => {
         }
 
         else {
-            document.querySelector('#err-msg-username').innerText = "Please input your name";
+            document.querySelector('#err-msg-username').innerText = "请输入你的名字噢";
         }
     } );
 
