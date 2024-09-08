@@ -71,34 +71,65 @@ window.addEventListener('load', () => {
             });
 
 
+            // socket.on('sdp', async (data) => {
+            //     if (data.description.type === 'offer') {
+            //         data.description ? await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description)) : '';
+
+            //         h.getUserFullMedia().then(async (stream) => {
+            //             if (!document.getElementById('local').srcObject) {
+            //                 h.setLocalStream(stream);
+            //             }
+
+            //             //save my stream
+            //             myStream = stream;
+
+            //             stream.getTracks().forEach((track) => {
+            //                 pc[data.sender].addTrack(track, stream);
+            //             });
+
+            //             let answer = await pc[data.sender].createAnswer();
+
+            //             await pc[data.sender].setLocalDescription(answer);
+
+            //             socket.emit('sdp', { description: pc[data.sender].localDescription, to: data.sender, sender: socketId });
+            //         }).catch((e) => {
+            //             console.error(e);
+            //         });
+            //     }
+
+            //     else if (data.description.type === 'answer') {
+            //         await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+            //     }
+            // });
             socket.on('sdp', async (data) => {
-                if (data.description.type === 'offer') {
-                    data.description ? await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description)) : '';
+                try {
+                    if (data.description.type === 'offer') {
+                        await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
 
-                    h.getUserFullMedia().then(async (stream) => {
-                        if (!document.getElementById('local').srcObject) {
-                            h.setLocalStream(stream);
-                        }
+                        h.getUserFullMedia().then(async (stream) => {
+                            if (!document.getElementById('local').srcObject) {
+                                h.setLocalStream(stream);
+                            }
 
-                        //save my stream
-                        myStream = stream;
+                            // 保存我的流
+                            myStream = stream;
 
-                        stream.getTracks().forEach((track) => {
-                            pc[data.sender].addTrack(track, stream);
+                            stream.getTracks().forEach((track) => {
+                                pc[data.sender].addTrack(track, stream);
+                            });
+
+                            let answer = await pc[data.sender].createAnswer();
+                            await pc[data.sender].setLocalDescription(answer);
+
+                            socket.emit('sdp', { description: pc[data.sender].localDescription, to: data.sender, sender: socketId });
+                        }).catch((e) => {
+                            console.error('Error accessing media devices: ', e);
                         });
-
-                        let answer = await pc[data.sender].createAnswer();
-
-                        await pc[data.sender].setLocalDescription(answer);
-
-                        socket.emit('sdp', { description: pc[data.sender].localDescription, to: data.sender, sender: socketId });
-                    }).catch((e) => {
-                        console.error(e);
-                    });
-                }
-
-                else if (data.description.type === 'answer') {
-                    await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+                    } else if (data.description.type === 'answer') {
+                        await pc[data.sender].setRemoteDescription(new RTCSessionDescription(data.description));
+                    }
+                } catch (e) {
+                    console.error('SDP handling error:', e);
                 }
             });
 
@@ -143,8 +174,19 @@ window.addEventListener('load', () => {
 
 
         function init(createOffer, partnerName) {
-            pc[partnerName] = new RTCPeerConnection(h.getIceServer());
+            // pc[partnerName] = new RTCPeerConnection(h.getIceServer());
+            // 初始化每个 partner 的 RTCPeerConnection
+            if (!pc[partnerName]) {
+                pc[partnerName] = new RTCPeerConnection(h.getIceServer());
+            }
+            // 添加控制台日志输出，显示 ICE 连接状态的变化
+            pc[partnerName].oniceconnectionstatechange = () => {
+                console.log(`ICE Connection State (${partnerName}): `, pc[partnerName].iceConnectionState);
+            };
 
+            pc[partnerName].onsignalingstatechange = () => {
+                console.log(`Signaling State (${partnerName}): `, pc[partnerName].signalingState);
+            };
             if (screen && screen.getTracks().length) {
                 screen.getTracks().forEach((track) => {
                     pc[partnerName].addTrack(track, screen);//should trigger negotiationneeded event
@@ -195,40 +237,78 @@ window.addEventListener('load', () => {
 
 
             //add
+            // pc[partnerName].ontrack = (e) => {
+            //     let str = e.streams[0];
+            //     if (document.getElementById(`${partnerName}-video`)) {
+            //         document.getElementById(`${partnerName}-video`).srcObject = str;
+            //     }
+
+            //     else {
+            //         //video elem
+            //         let newVid = document.createElement('video');
+            //         newVid.id = `${partnerName}-video`;
+            //         newVid.srcObject = str;
+            //         newVid.autoplay = true;
+            //         newVid.className = 'remote-video';
+
+            //         //video controls elements
+            //         let controlDiv = document.createElement('div');
+            //         controlDiv.className = 'remote-video-controls';
+            //         controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
+            //             <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
+
+            //         //create a new div for card
+            //         let cardDiv = document.createElement('div');
+            //         cardDiv.className = 'card card-sm';
+            //         cardDiv.id = partnerName;
+            //         cardDiv.appendChild(newVid);
+            //         cardDiv.appendChild(controlDiv);
+
+            //         //put div in main-section elem
+            //         document.getElementById('videos').appendChild(cardDiv);
+
+            //         h.adjustVideoElemSize();
+            //     }
+            // };
             pc[partnerName].ontrack = (e) => {
                 let str = e.streams[0];
                 if (document.getElementById(`${partnerName}-video`)) {
                     document.getElementById(`${partnerName}-video`).srcObject = str;
-                }
-
-                else {
-                    //video elem
+                } else {
+                    // 创建一个新的 video 元素
                     let newVid = document.createElement('video');
                     newVid.id = `${partnerName}-video`;
                     newVid.srcObject = str;
                     newVid.autoplay = true;
                     newVid.className = 'remote-video';
 
-                    //video controls elements
+                    // 视频控制元素
                     let controlDiv = document.createElement('div');
                     controlDiv.className = 'remote-video-controls';
                     controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
                         <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
-                    //create a new div for card
+                    // 创建一个新的 div 来容纳视频卡片
                     let cardDiv = document.createElement('div');
                     cardDiv.className = 'card card-sm';
                     cardDiv.id = partnerName;
                     cardDiv.appendChild(newVid);
                     cardDiv.appendChild(controlDiv);
 
-                    //put div in main-section elem
+                    // 将新创建的 div 添加到 main-section
                     document.getElementById('videos').appendChild(cardDiv);
 
                     h.adjustVideoElemSize();
                 }
             };
 
+            pc[partnerName].oniceconnectionstatechange = () => {
+                console.log('ICE Connection State: ', pc[partnerName].iceConnectionState);
+            };
+
+            pc[partnerName].onsignalingstatechange = () => {
+                console.log('Signaling State: ', pc[partnerName].signalingState);
+            };
 
 
             pc[partnerName].onconnectionstatechange = (d) => {
