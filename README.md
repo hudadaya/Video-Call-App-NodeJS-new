@@ -29,7 +29,7 @@
 - 使用 Git 将项目代码克隆到服务器上：
 
   ```
-  git clone https://github.com/IvonnaZhang/VideoConnect.git
+  git clone https://github.com/hudadaya/Video-Call-App-NodeJS-new.git
   ```
 
 - 进入文件夹
