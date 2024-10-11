@@ -35,7 +35,7 @@
 - 进入文件夹
 
   ````
-  cd VideoConnect
+  cd Video-Call-App-NodeJS-new
   ````
 
 ### Step5 安装项目依赖
